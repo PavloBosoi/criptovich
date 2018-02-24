@@ -158,12 +158,12 @@ export class AnnounceComponent implements OnInit, OnDestroy{
                         const address: any = [];
                         for (let i = 0; i < countAddresses; i++) {
 
-                            address[i] = links[counter + i].pathname.replace('/', '');
+                            address[i] = (links[counter + i] as HTMLAnchorElement).pathname.replace('/', '');
                         }
 
                         this.announceService.getRichValues(address.join(',')).subscribe((value) => {
                             console.log(value);
-                            value.data.forEach((item, i) => {
+                            value['data'].forEach((item, i) => {
                                 balance += item.balance / 100000000;
                                 if (2500 * a === 2500 * links.length / countAddresses) {
                                     resolve(balance);
