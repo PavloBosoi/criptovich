@@ -58,7 +58,7 @@ export class AnnounceService {
 
 //++++++++++++++++++++++++
     parseRichList() {
-        return this.http.get('/stats/rich-list').toPromise();
+        return this.http.get('/stats/rich-list', {responseType: 'text'}).toPromise();
     }
 
     getRichValues(address) {

@@ -13,7 +13,7 @@ import {AnnounceService} from "../../shared/services/announce.service";
 export class AnnounceComponent implements OnInit, OnDestroy{
     subscription: Subscription;
     resultTwitter: any = [];
-    balance: any = [];
+    richBalancefinished: boolean = false;
     resultTwitterMarketcap: any;
     @ViewChild('searcValue') searcValue: ElementRef;
 
@@ -142,55 +142,52 @@ export class AnnounceComponent implements OnInit, OnDestroy{
 
     getRichList() {
         this.announceService.parseRichList().then((response) => {
-            console.log(response);
-        }).catch((err: any) => {
 
             const html = document.createElement('html');
-            html.innerHTML = err.error.text;
+            html.innerHTML = response;
             const links = html.querySelectorAll('[ga-type]');
             const countAddresses = 10;
             let counter = 0;
 
-            let promise = new Promise((resolve, reject) => {
-                let balance: number = 0;
+            const promise = new Promise((resolve, reject) => {
+                let balance = 0;
 
-                    for(let a = 1; a <= links.length / countAddresses; a++){
+                for (let a = 1; a <= links.length / countAddresses; a++) {
 
-                        setTimeout(()=>{
-                            let address: any = [];
-                            for (let i = 0; i < countAddresses; i++) {
+                    setTimeout(() => {
+                        const address: any = [];
+                        for (let i = 0; i < countAddresses; i++) {
 
-                                //address[i] = links[counter + i].innerHTML.trim();
+                            address[i] = links[counter + i].pathname.replace('/', '');
+                        }
 
-                                //console.log(links[counter + i].pathname.replace('/',''));
-
-                                address[i] = links[counter + i].pathname.replace('/','');
-                            }
-
-                            this.announceService.getRichValues(address.join(',')).subscribe((response) => {
-                                console.log(response.data);
-                                response.data.forEach((item, i) => {
-                                    balance += item.balance/100000000;
-                                });
+                        this.announceService.getRichValues(address.join(',')).subscribe((value) => {
+                            console.log(value);
+                            value.data.forEach((item, i) => {
+                                balance += item.balance / 100000000;
+                                if (2500 * a === 2500 * links.length / countAddresses) {
+                                    resolve(balance);
+                                }
                             });
-                            console.log(counter);
-                            counter += countAddresses;
-                        }, 1500 * a);
+                        });
+                        console.log(counter);
+                        counter += countAddresses;
+                    }, 2500 * a);
 
-                    }
-                setTimeout(()=> {
+                }
+
+                /*setTimeout(() => {
                     resolve(balance);
-                }, 2000 * links.length / countAddresses);
+                }, 2500 * links.length / countAddresses);*/
 
             });
 
-            promise.then((response) => {
-                console.log('response',response);
-                //let sum = response.reduce((a, b) => a + b, 0);
-                //console.log(response);
+            promise.then((balance) => {
+                console.log('response', balance);
             });
 
-
+        }).catch((err: any) => {
+            console.log(err);
         });
     }
 
