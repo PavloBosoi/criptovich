@@ -64,4 +64,15 @@ export class AnnounceService {
     getRichValues(address) {
         return this.http.get('/v3/address/' + address);
     }
+
+    getDBBalance() {
+        return this.http.get('//localhost:3000/balance');
+    }
+
+    postDBBalance(balance) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+        return this.http.post('//localhost:3000/balance', balance, {headers: headers});
+    }
 }

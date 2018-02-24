@@ -13,7 +13,7 @@ import {AnnounceService} from "../../shared/services/announce.service";
 export class AnnounceComponent implements OnInit, OnDestroy{
     subscription: Subscription;
     resultTwitter: any = [];
-    richBalancefinished: boolean = false;
+    currentBalanceStatus: string = '';
     resultTwitterMarketcap: any;
     @ViewChild('searcValue') searcValue: ElementRef;
 
@@ -183,12 +183,36 @@ export class AnnounceComponent implements OnInit, OnDestroy{
             });
 
             promise.then((balance) => {
+                this.compareDBBalance(balance);
                 console.log('response', balance);
             });
 
         }).catch((err: any) => {
             console.log(err);
         });
+    }
+
+    compareDBBalance(balance) {
+        this.announceService.getDBBalance()
+            .subscribe((response: any) => {
+                if (response.amount < balance || response.amount > balance) {
+                    const changeSum = -(response.amount - balance);
+                    this.currentBalanceStatus = `Balance changed: ${balance} (${response.amount}). Change sum: ${changeSum}`;
+                    this.changeDBBalance(balance);
+                } else {
+                    this.currentBalanceStatus = `Balance not changed`;
+                }
+            });
+    }
+
+    changeDBBalance(balance) {
+        const body = {
+            'amount': balance
+        };
+        this.announceService.postDBBalance(body)
+            .subscribe((response: any) => {
+                console.log(response);
+            });
     }
 
 }
