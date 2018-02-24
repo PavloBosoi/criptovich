@@ -1,0 +1,16 @@
+
+    <div class="announce-search">
+        <input type="text" placeholder="search" #searchValue />
+        <button (click)="searchAnnounce($event, searchValue)">Search</button>
+    </div>
+    <!--<div class="announce-twitter" *ngFor="let item of resultTwitter">
+        <div class="announce-item">{{item.text}}
+        <span>{{item.created_at}}</span>
+        </div>
+    </div>-->
+
+    <div class="announce-twitter" *ngFor="let item of resultTwitter">
+        <div class="announce-item">{{item.text}}
+            <span>{{item.created_at}}</span>
+        </div>
+    </div>

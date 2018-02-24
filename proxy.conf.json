@@ -1,0 +1,32 @@
+{
+  "/api/*": {
+    "target": "https://coindar.org",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/v1/*": {
+    "target": "https://api.coinmarketcap.com",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/1.1/*": {
+    "target": "https://api.twitter.com",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/oauth2/*": {
+    "target": "https://api.twitter.com",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/stats/*": {
+    "target": "https://btc.com",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/v3/*": {
+    "target": "https://chain.api.btc.com",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
