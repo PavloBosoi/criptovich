@@ -14,6 +14,8 @@ export class AnnounceComponent implements OnInit, OnDestroy{
     subscription: Subscription;
     resultTwitter: any = [];
     currentBalanceStatus: string = '';
+    startBalanceChanges: string = '';
+    balanseNotRead: boolean = false;
     resultTwitterMarketcap: any;
     @ViewChild('searcValue') searcValue: ElementRef;
 
@@ -146,7 +148,8 @@ export class AnnounceComponent implements OnInit, OnDestroy{
             const html = document.createElement('html');
             html.innerHTML = response;
             const links = html.querySelectorAll('[ga-type]');
-            const countAddresses = 10;
+            const countAddresses = 10,
+                responseTime = 2500;
             let counter = 0;
 
             const promise = new Promise((resolve, reject) => {
@@ -161,18 +164,22 @@ export class AnnounceComponent implements OnInit, OnDestroy{
                             address[i] = (links[counter + i] as HTMLAnchorElement).pathname.replace('/', '');
                         }
 
-                        this.announceService.getRichValues(address.join(',')).subscribe((value) => {
+                        this.announceService.getRichValues(address.join(',')).then((value) => {
                             console.log(value);
                             value['data'].forEach((item, i) => {
                                 balance += item.balance / 100000000;
-                                if (2500 * a === 2500 * links.length / countAddresses) {
+                                console.log(this.balanseNotRead);
+                                if (responseTime * a === responseTime * links.length / countAddresses) {
                                     resolve(balance);
                                 }
                             });
+                        }).catch((err: any) => {
+                            console.log(err);
+                            this.balanseNotRead = true;
                         });
                         console.log(counter);
                         counter += countAddresses;
-                    }, 2500 * a);
+                    }, responseTime * a);
 
                 }
 
@@ -183,8 +190,13 @@ export class AnnounceComponent implements OnInit, OnDestroy{
             });
 
             promise.then((balance) => {
-                this.compareDBBalance(balance);
-                console.log('response', balance);
+                if (!this.balanseNotRead) {
+                    this.compareDBBalance(balance);
+                } else {
+                    this.getRichList();
+                    this.balanseNotRead = false;
+                }
+                console.log('isBalanceRead', this.balanseNotRead);
             });
 
         }).catch((err: any) => {
@@ -195,24 +207,35 @@ export class AnnounceComponent implements OnInit, OnDestroy{
     compareDBBalance(balance) {
         this.announceService.getDBBalance()
             .subscribe((response: any) => {
-                if (response.amount < balance || response.amount > balance) {
-                    const changeSum = -(response.amount - balance);
-                    this.currentBalanceStatus = `Balance changed: ${balance} (${response.amount}). Change sum: ${changeSum}`;
-                    this.changeDBBalance(balance);
+
+            const currentDBBalance = response[0].amount,
+                startFollowingPosition = response[1].start_position;
+
+                console.log('getDBBalance', startFollowingPosition);
+
+                if (currentDBBalance < balance || currentDBBalance > balance) {
+                    const changeSum = -(currentDBBalance - balance);
+                    this.currentBalanceStatus = `Balance changed: ${balance} (${currentDBBalance}). Change sum: ${this.compareBalances(currentDBBalance, balance)}`;
+                    //this.changeDBBalance(balance);
+                    this.startBalanceChanges = `Start following balance changed: ${this.compareBalances(startFollowingPosition, balance)}`;
                 } else {
                     this.currentBalanceStatus = `Balance not changed`;
                 }
             });
     }
 
-    changeDBBalance(balance) {
+    changeDBBalance(currentBalance) {
         const body = {
-            'amount': balance
+            'amount': currentBalance
         };
         this.announceService.postDBBalance(body)
             .subscribe((response: any) => {
                 console.log(response);
             });
+    }
+
+    compareBalances(startBalance, currentBalance) {
+        return -(startBalance - currentBalance);
     }
 
 }
