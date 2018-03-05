@@ -5,6 +5,9 @@ import {Observable} from "rxjs";
 @Injectable()
 
 export class AnnounceService {
+    headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+    });
     constructor(
         private http: HttpClient
     ) {}
@@ -58,7 +61,7 @@ export class AnnounceService {
 
 //++++++++++++++++++++++++
     parseRichList() {
-        return this.http.get('/stats/rich-list', {responseType: 'text'}).toPromise();
+        return this.http.get('/ru/top-100-richest-bitcoin-addresses.html', {responseType: 'text'}).toPromise();
     }
 
     getRichValues(address) {
@@ -69,10 +72,19 @@ export class AnnounceService {
         return this.http.get('//localhost:3000/balance');
     }
 
-    postDBBalance(balance) {
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
-        return this.http.post('//localhost:3000/balance/1', balance, {headers: headers});
+    putDBBalance(balance) {
+        return this.http.put('//localhost:3000/balance/1', balance, {headers: this.headers});
+    }
+
+    putDBBalances(fieldName, balances) {
+        return this.http.put('//localhost:3000/balances', balances, {headers: this.headers});
+    }
+
+    postBalancesToDB(fieldName, balances) {
+        return this.http.post('//localhost:3000/' + fieldName, balances, {headers: this.headers});
+    }
+
+    checkBalanceInDB(fieldName) {
+        return this.http.get('//localhost:3000/' + fieldName).toPromise();
     }
 }

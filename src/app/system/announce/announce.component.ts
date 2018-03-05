@@ -10,14 +10,11 @@ import {AnnounceService} from "../../shared/services/announce.service";
     styleUrls: ['./announce.component.scss']
 })
 
-export class AnnounceComponent implements OnInit, OnDestroy{
+export class AnnounceComponent implements OnInit, OnDestroy {
     subscription: Subscription;
     resultTwitter: any = [];
-    currentBalanceStatus: string = '';
-    startBalanceChanges: string = '';
-    balanseNotRead: boolean = false;
     resultTwitterMarketcap: any;
-    @ViewChild('searcValue') searcValue: ElementRef;
+    @ViewChild('searchValue') searchValue: ElementRef;
 
     constructor(
         private routerService: Router,
@@ -32,15 +29,10 @@ export class AnnounceComponent implements OnInit, OnDestroy{
 
         this.getDataTwitterMarketcap();
 
-
-
-
-
-        this.getRichList();
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        //this.subscription.unsubscribe();
     }
 
     getDataCoindar() {
@@ -97,145 +89,6 @@ export class AnnounceComponent implements OnInit, OnDestroy{
 
     searchAnnounce(event, searchValue) {
         this.getAuthTwitter(searchValue.value);
-    }
-
-
-
-
-
-
-
-
-
-//++++++++++++++++++++++++
-
-/*    getRichList() {
-        this.announceService.parseRichList().then((response) => {
-            console.log(response);
-        }).catch((err: any) => {
-
-            const html = document.createElement('html');
-            html.innerHTML = err.error.text;
-            const nodes = html.querySelectorAll('[ga-type]');
-            let links = [];
-
-            for (let i = 0; i < nodes.length; i++) {
-                links.push(nodes[i].innerHTML.trim())
-            }
-
-
-            const getRequest = (links) => {
-                setTimeout(() => {
-                    const length = links.length;
-                    const amount = (length < 10) ? (length - 10) : 10
-
-                    this.announceService.getRichValues(links.slice(length-amount).join(',')).subscribe((response) => {
-                        console.log(response);
-                    });
-
-                    if (links.length) getRequest(links.slice(0, length-amount)) else return;
-
-                }, 2000);
-            }
-            getRequest(links);
-        });
-    }*/
-
-
-    getRichList() {
-        this.announceService.parseRichList().then((response) => {
-
-            const html = document.createElement('html');
-            html.innerHTML = response;
-            const links = html.querySelectorAll('[ga-type]');
-            const countAddresses = 10,
-                responseTime = 2500;
-            let counter = 0;
-
-            const promise = new Promise((resolve, reject) => {
-                let balance = 0;
-
-                for (let a = 1; a <= links.length / countAddresses; a++) {
-
-                    setTimeout(() => {
-                        const address: any = [];
-                        for (let i = 0; i < countAddresses; i++) {
-
-                            address[i] = (links[counter + i] as HTMLAnchorElement).pathname.replace('/', '');
-                        }
-
-                        this.announceService.getRichValues(address.join(',')).then((value) => {
-                            console.log(value);
-                            value['data'].forEach((item, i) => {
-                                balance += item.balance / 100000000;
-                                console.log(this.balanseNotRead);
-                                if (responseTime * a === responseTime * links.length / countAddresses) {
-                                    resolve(balance);
-                                }
-                            });
-                        }).catch((err: any) => {
-                            console.log(err);
-                            this.balanseNotRead = true;
-                        });
-                        console.log(counter);
-                        counter += countAddresses;
-                    }, responseTime * a);
-
-                }
-
-                /*setTimeout(() => {
-                    resolve(balance);
-                }, 2500 * links.length / countAddresses);*/
-
-            });
-
-            promise.then((balance) => {
-                if (!this.balanseNotRead) {
-                    this.compareDBBalance(balance);
-                } else {
-                    this.getRichList();
-                    this.balanseNotRead = false;
-                }
-                console.log('isBalanceRead', this.balanseNotRead);
-            });
-
-        }).catch((err: any) => {
-            console.log(err);
-        });
-    }
-
-    compareDBBalance(balance) {
-        this.announceService.getDBBalance()
-            .subscribe((response: any) => {
-
-            const currentDBBalance = response[0].amount,
-                startFollowingPosition = response[1].start_position;
-
-                console.log('getDBBalance', startFollowingPosition);
-
-                if (currentDBBalance < balance || currentDBBalance > balance) {
-                    const changeSum = -(currentDBBalance - balance);
-                    this.currentBalanceStatus = `Balance changed: ${balance} (${currentDBBalance}). Change sum: ${this.compareBalances(currentDBBalance, balance)}`;
-                    //this.changeDBBalance(balance);
-                    this.startBalanceChanges = `Start following balance changed: ${this.compareBalances(startFollowingPosition, balance)}`;
-                } else {
-                    this.currentBalanceStatus = `Balance not changed`;
-                }
-            });
-    }
-
-    changeDBBalance(currentBalance) {
-        const body = {
-            'amount': currentBalance
-        };
-        this.announceService.postDBBalance(body)
-            .subscribe((response: any) => {
-                console.log(response);
-            });
-    }
-
-    compareBalances(startBalance, currentBalance) {
-        return -(startBalance - currentBalance);
     }
 
 }

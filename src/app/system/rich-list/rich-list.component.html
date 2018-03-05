@@ -1,0 +1,10 @@
+<div class="balance-current">{{currentBalanceStatus}}</div>
+<div class="balance-start">{{startBalanceChanges}}</div>
+<div class="balances-all">
+  <div class="balance-single" *ngFor="let item of balancesAllChange; let i = index" [class]="item.status">
+    <span>{{i+1}}</span>
+    <span>{{item?.address}}</span>
+    <span>{{item?.balance}}</span>
+    <span>{{item?.difference}}</span>
+  </div>
+</div>

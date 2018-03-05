@@ -19,8 +19,8 @@
     "secure": false,
     "changeOrigin": true
   },
-  "/ru/*": {
-    "target": "https://bitinfocharts.com",
+  "/stats/*": {
+    "target": "https://btc.com",
     "secure": false,
     "changeOrigin": true
   },

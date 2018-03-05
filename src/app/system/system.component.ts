@@ -12,6 +12,6 @@ export class SystemComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.router.navigate((['/announce']));
+        //this.router.navigate((['/announce']));
     }
 }

@@ -3,10 +3,12 @@ import {Routes, RouterModule} from "@angular/router";
 
 import {AnnounceComponent} from "./announce/announce.component";
 import {SystemComponent} from "./system.component";
+import {RichListComponent} from "./rich-list/rich-list.component";
 
 const routes: Routes = [
-    {path: '', component: SystemComponent, children: [
-        {path: 'announce', component: AnnounceComponent}
+    {path: 'system', component: SystemComponent, children: [
+        {path: 'announce', component: AnnounceComponent},
+        {path: 'rich-list', component: RichListComponent}
     ]}
 ];
 
