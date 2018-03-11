@@ -5,12 +5,11 @@ import {Observable} from "rxjs";
 @Injectable()
 
 export class AnnounceService {
-    headers = new HttpHeaders({
-        'Content-Type': 'application/json'
-    });
     constructor(
         private http: HttpClient
-    ) {}
+    ) {
+
+    }
 
     getAnnounceCoindar(): Observable<any> {
         const headers = new HttpHeaders({
@@ -19,8 +18,6 @@ export class AnnounceService {
         });
         return this.http.get('/api/v1/lastEvents');
     }
-
-
 
     getAnnounceTwitter(token: string, value: string): Observable<any> {
         const headers = new HttpHeaders({
@@ -54,37 +51,5 @@ export class AnnounceService {
 
     getAnnounceMarketcap() {
         return this.http.get('/v1/ticker/?start=100&limit=20');
-    }
-
-
-
-
-//++++++++++++++++++++++++
-    parseRichList() {
-        return this.http.get('/ru/top-100-richest-bitcoin-addresses.html', {responseType: 'text'}).toPromise();
-    }
-
-    getRichValues(address) {
-        return this.http.get('/v3/address/' + address).toPromise();
-    }
-
-    getDBBalance() {
-        return this.http.get('//localhost:3000/balance');
-    }
-
-    putDBBalance(balance) {
-        return this.http.put('//localhost:3000/balance/1', balance, {headers: this.headers});
-    }
-
-    putDBBalances(fieldName, balances) {
-        return this.http.put('//localhost:3000/balances', balances, {headers: this.headers});
-    }
-
-    postBalancesToDB(fieldName, balances) {
-        return this.http.post('//localhost:3000/' + fieldName, balances, {headers: this.headers});
-    }
-
-    checkBalanceInDB(fieldName) {
-        return this.http.get('//localhost:3000/' + fieldName).toPromise();
     }
 }
