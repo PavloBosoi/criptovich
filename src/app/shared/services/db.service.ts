@@ -25,40 +25,18 @@ export class DbService {
     return this.http.get('/v3/address/' + address).toPromise();
   }
 
-/*  getDBBalance() {
-      return this.http.get('//localhost:3000/balance');
-    }
- postBalancesToDB(fieldName, balances) {
-    return this.http.post('//localhost:3000/' + fieldName, balances, {headers: this.headers});
- }
-   checkBalanceInDB(fieldName) {
-    return this.http.get('//localhost:3000/' + fieldName).toPromise();
-  }
-    putDBBalance(balance) {
-    return this.http.put('//localhost:3000/balance/1', balance, {headers: this.headers});
-  }
-
-  putDBBalances(fieldName, balances) {
-    return this.http.put('//localhost:3000/balances', balances, {headers: this.headers});
-  }
-  */
-
-    putDBBalance(balance) {
-        return this.http.put('//localhost:3000/balance/1', balance, {headers: this.headers});
-    }
-
-    putDBBalances(fieldName, balances) {
-        return this.http.put('//localhost:3000/balances', balances, {headers: this.headers});
-    }
-
     testFirebase(fieldName) {
         return this.firebase.list(fieldName).snapshotChanges().map(changes => {
-            return changes.map(c => ({ key: c.payload.key, ...c.payload.val() }));
+            return changes.map(c => ({ key: c.payload.key, ...c.payload.val()}));
         });
     }
 
-    updateDBBalances(fieldName: string, key: string, newBalances: any) {
+    setDBBalances(fieldName: string, key: string, newBalances: any) {
       this.firebase.list(fieldName).set(key, newBalances);
+    }
+
+    updateDBBalance(fieldName: string, key: string, value: any) {
+        this.firebase.list(fieldName).update(key, value);
     }
 
   insertBalancesToDB(fieldName, balances) {

@@ -8,6 +8,7 @@ import {SystemRoutingModule} from "./system-routing.module";
 import {AnnounceService} from "../shared/services/announce.service";
 import { RichListComponent } from './rich-list/rich-list.component';
 import { HeaderComponent } from './shared/components/header/header.component';
+import {MaterialCustomModule} from "../shared/material-custom.module";
 
 @NgModule({
     declarations: [
@@ -19,7 +20,8 @@ import { HeaderComponent } from './shared/components/header/header.component';
     imports: [
         CommonModule,
         FormsModule,
-        SystemRoutingModule
+        SystemRoutingModule,
+        MaterialCustomModule
     ],
     providers: [
         AnnounceService

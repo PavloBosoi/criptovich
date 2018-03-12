@@ -1,4 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {MatTableDataSource} from "@angular/material";
 
 import {DbService} from "../../shared/services/db.service";
 
@@ -14,9 +15,15 @@ export class RichListComponent implements OnInit {
   balancesFull: any = [];
   balancesAllChange: any = [];
 
+  //math data
+    balanceDevider = 100000000;
+
     //name of all balances field in DB
     balanceDBField = 'balance';
     balancesDBField = 'balances';
+
+    //table data
+    displayedColumns = ['id', 'address', 'balance', 'difference'];
 
 /*    @ViewChild('balanceSingle') balanceSingle: ElementRef;*/
 
@@ -94,7 +101,7 @@ export class RichListComponent implements OnInit {
                         item.id = balancesFullCounter;
                         this.balancesFull.push(item);
 
-                        balance += item.balance / 100000000;
+                        balance += item.balance / this.balanceDevider;
                         console.log(this.balanceNotRead);
                         if (responseTime * a === responseTime * links.length / countAddresses) {
                             resolve(balance);
@@ -123,7 +130,7 @@ export class RichListComponent implements OnInit {
 
 
         //loop parse variable
-        const countAddresses = 10,
+        const countAddresses = 18,
             responseTime = 2500;
 
         //loops counters variable
@@ -135,14 +142,19 @@ export class RichListComponent implements OnInit {
             let balance = 0;
 
             //divide matched addresses to 10 part of 10(all 100 items)
-            for (let a = 1; a <= matchAddresses.length / countAddresses; a++) {
+            for (let a = 1; a <= Math.ceil(matchAddresses.length / countAddresses); a++) {
 
                 setTimeout(() => {
                     const address: any = [];
                     //add all addresses to new array starts from ends item last time
                     for (let i = 0; i < countAddresses; i++) {
-                        //for example 0+1, 0+2...10+1...40+1
-                        address[i] = matchAddresses[counter + i];
+                        //check on undefined address when loop over than addresses exist(100)
+                        if (typeof matchAddresses[counter + i] !== 'undefined') {
+                            //for example 0+1, 0+2...10+1...40+1
+                            address[i] = matchAddresses[counter + i];
+                        } else {
+                            break;
+                        }
                     }
 
                     //get address information(addresses sends by 10 items in one string to API)
@@ -160,10 +172,10 @@ export class RichListComponent implements OnInit {
                                 this.balancesFull.push(item);
 
                                 //float balance(satoshi part)
-                                balance += item.balance / 100000000;
+                                balance += item.balance / this.balanceDevider;
                                 console.log(this.balanceNotRead);
                                 //if loop is end - send promise full balance
-                                if (responseTime * a === responseTime * matchAddresses.length / countAddresses) {
+                                if (responseTime * a === responseTime * Math.ceil(matchAddresses.length / countAddresses)) {
                                     resolve(balance);
                                 }
                                 balancesFullCounter++;
@@ -213,20 +225,24 @@ export class RichListComponent implements OnInit {
 
                             let difference = '',
                                 status = '';
+                            const balanceNew = this.balancesFull[index].balance / this.balanceDevider,
+                                addressNew = this.balancesFull[index].address;
+
+                            console.log(`BAL ${index + 1}`, balanceNew, responseObj[i].balance);
 
                             //compare addresses and add difference & status to them
-                            if (responseObj[i].address !== this.balancesFull[index].address) {
+                            if (this.balancesFull[index].address !== responseObj[i].address) {
 
                                 difference = '' + 0;
                                 status = 'new';
                             } else {
                                 //add status to balance item if 'balance' in DB different with coming 'balance'
-                                if (this.balancesFull[index].balance > responseObj[i].balance) {
-                                    difference = '+' + (this.balancesFull[index].balance - responseObj[i].balance) / 100000000;
+                                if (balanceNew > responseObj[i].balance) {
+                                    difference = '+' + (balanceNew - responseObj[i].balance);
                                     status = 'positive';
 
-                                } else if (this.balancesFull[index].balance < responseObj[i].balance) {
-                                    difference = '-' + (responseObj[i].balance - this.balancesFull[index].balance) / 100000000;
+                                } else if (balanceNew < responseObj[i].balance) {
+                                    difference = '-' + (responseObj[i].balance - balanceNew);
                                     status = 'negative';
 
                                 } else {
@@ -238,6 +254,8 @@ export class RichListComponent implements OnInit {
                             //add difference to item in new array
                             this.balancesFull[index].difference = difference;
                             this.balancesFull[index].status = status;
+                            this.balancesFull[index].address = addressNew;
+                            this.balancesFull[index].balance = balanceNew;
 
                             //add item to new array
                             balancesNew.push(this.balancesFull[index]);
@@ -259,11 +277,11 @@ export class RichListComponent implements OnInit {
                         } else {
                             //add status to balance item if 'balance' in DB different with coming 'balance'
                             if (this.balancesFull[index].balance > item.balance) {
-                                difference = '+' + (this.balancesFull[index].balance - item.balance) / 100000000;
+                                difference = '+' + (this.balancesFull[index].balance - item.balance) / this.balanceDevider;
                                 status = 'positive';
 
                             } else if (this.balancesFull[index].balance < item.balance) {
-                                difference = '-' + (item.balance - this.balancesFull[index].balance) / 100000000;
+                                difference = '-' + (item.balance - this.balancesFull[index].balance) / this.balanceDevider;
                                 status = 'negative';
 
                             } else {
@@ -282,12 +300,12 @@ export class RichListComponent implements OnInit {
                     //console.log('balancesNew', balancesNew);
 
                     //rewrite balances in DB
-                    this.dbService.updateDBBalances(this.balancesDBField, responseObj.key, balancesNew)
+                    this.dbService.setDBBalances(this.balancesDBField, responseObj.key, balancesNew)
                         /*.subscribe((result) => {
                             console.log('All new balances Changed');
                         });*/
 
-                    this.balancesAllChange = balancesNew;
+                    this.balancesAllChange = new MatTableDataSource(balancesNew);
                 }
               })
               /*.catch((err: any) => {
@@ -312,12 +330,10 @@ export class RichListComponent implements OnInit {
           const currentDBBalance = response[0].amount,
               startFollowingPosition = response[1].start_position;
 
-          console.log('getDBBalance', startFollowingPosition, response);
-
           if (currentDBBalance < balance || currentDBBalance > balance) {
             const changeSum = -(currentDBBalance - balance);
             this.currentBalanceStatus = `Balance changed: ${balance} (${currentDBBalance}). Change sum: ${this.compareBalances(currentDBBalance, balance)}`;
-            this.changeDBBalance(balance);
+            this.changeDBBalance(response[0].key, balance);
             this.startBalanceChanges = `Start following balance changed: ${this.compareBalances(startFollowingPosition, balance)
                 }`;
           } else {
@@ -326,14 +342,14 @@ export class RichListComponent implements OnInit {
         });
   }
 
-  changeDBBalance(currentBalance) {
+  changeDBBalance(key, currentBalance) {
     const body = {
       'amount': currentBalance
     };
-    this.dbService.putDBBalance(body)
-        .subscribe((response: any) => {
+    this.dbService.updateDBBalance(this.balanceDBField, key, body);
+        /*.subscribe((response: any) => {
           console.log(response);
-        });
+        });*/
   }
 
   compareBalances(startBalance, currentBalance) {

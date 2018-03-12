@@ -1,0 +1,21 @@
+/*VARIABLES*/
+$green: #00C853;
+$red: #DD2C00;
+
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+  box-sizing: border-box;
+}
+li{
+  list-style-type: none;
+}
+
+/*GLOBAL MARKERS*/
+.positive{
+  background-color: $green;
+}
+.negative{
+  background-color: $red;
+}

@@ -6,6 +6,8 @@ import {HttpModule} from "@angular/http";
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import 'hammerjs';
 
 
 import { AppComponent } from './app.component';
@@ -13,6 +15,7 @@ import {SystemModule} from "./system/system.module";
 import {AuthModule} from "./auth/auth.module";
 import {AppRoutingModule} from "./app-routing.module";
 import {DbService} from "./shared/services/db.service";
+import {MaterialCustomModule} from "./shared/material-custom.module";
 
 
 @NgModule({
@@ -27,8 +30,13 @@ import {DbService} from "./shared/services/db.service";
     SystemModule,
     AuthModule,
     AppRoutingModule,
+    MaterialCustomModule,
     AngularFireDatabaseModule,
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    BrowserAnimationsModule
+  ],
+  exports: [
+
   ],
   providers: [
     DbService
