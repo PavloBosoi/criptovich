@@ -16,6 +16,7 @@ import {AuthModule} from "./auth/auth.module";
 import {AppRoutingModule} from "./app-routing.module";
 import {DbService} from "./shared/services/db.service";
 import {MaterialCustomModule} from "./shared/material-custom.module";
+import {DataService} from "./shared/services/data.service";
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import {MaterialCustomModule} from "./shared/material-custom.module";
 
   ],
   providers: [
-    DbService
+    DbService,
+    DataService
   ],
   bootstrap: [
       AppComponent

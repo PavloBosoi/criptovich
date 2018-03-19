@@ -1,0 +1,31 @@
+<div class="example-container mat-elevation-z8">
+  <mat-table #table [dataSource]="balancesAllChange">
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Number </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.id + 1}} </mat-cell>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="balance">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Balance </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.balance}} btc </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="difference">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Changes </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.difference}} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="row.status"></mat-row>
+  </mat-table>
+</div>

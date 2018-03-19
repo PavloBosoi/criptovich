@@ -1,6 +1,8 @@
 /*VARIABLES*/
 $green: #00C853;
 $red: #DD2C00;
+$teal: #21BB9E;
+
 
 *{
   margin: 0;
@@ -18,4 +20,7 @@ li{
 }
 .negative{
   background-color: $red;
+}
+.new{
+  background-color: $teal;
 }

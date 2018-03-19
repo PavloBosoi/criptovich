@@ -9,13 +9,18 @@ import {AnnounceService} from "../shared/services/announce.service";
 import { RichListComponent } from './rich-list/rich-list.component';
 import { HeaderComponent } from './shared/components/header/header.component';
 import {MaterialCustomModule} from "../shared/material-custom.module";
+import { AddressesComponent } from './rich-list/addresses/addresses.component';
+import { TotalComponent } from './rich-list/total/total.component';
+import {SharedDataService} from "./shared/services/shared-data.service";
 
 @NgModule({
     declarations: [
         AnnounceComponent,
         SystemComponent,
         RichListComponent,
-        HeaderComponent
+        HeaderComponent,
+        AddressesComponent,
+        TotalComponent
     ],
     imports: [
         CommonModule,
@@ -24,7 +29,8 @@ import {MaterialCustomModule} from "../shared/material-custom.module";
         MaterialCustomModule
     ],
     providers: [
-        AnnounceService
+        AnnounceService,
+        SharedDataService
     ]
 })
 export class SystemModule {
