@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, EventEmitter, Output} from '@angular/core';
+import {Component, OnInit, Input, EventEmitter, Output, OnDestroy} from '@angular/core';
 import {DbService} from "../../../shared/services/db.service";
 import {MatTableDataSource} from "@angular/material";
 import {Router} from "@angular/router";
@@ -10,7 +10,7 @@ import {SharedDataService} from "../../shared/services/shared-data.service";
   templateUrl: './addresses.component.html',
   styleUrls: ['./addresses.component.scss']
 })
-export class AddressesComponent implements OnInit {
+export class AddressesComponent implements OnInit, OnDestroy {
   @Input('matchAddresses') matchAddresses: any;
 
   balanceNotRead: boolean = false;
@@ -156,7 +156,8 @@ export class AddressesComponent implements OnInit {
                   if (responseObj.hasOwnProperty(i) && i !== 'key') {
 
                     let difference = '',
-                        status = '';
+                        status = '',
+                        oldAddress = '';
                     const balanceNew = this.balancesFull[index].balance / this.balanceDevider,
                         addressNew = this.balancesFull[index].address;
 
@@ -165,21 +166,25 @@ export class AddressesComponent implements OnInit {
                     //compare addresses and add difference & status to them
                     if (this.balancesFull[index].address !== responseObj[i].address) {
 
-                      difference = '' + 0;
+                      difference = (balanceNew - responseObj[i].balance) > 0 ? '+' + (balanceNew - responseObj[i].balance) : '-' + (responseObj[i].balance - balanceNew);
                       status = 'new';
+                      oldAddress = responseObj[i].address;
                     } else {
                       //add status to balance item if 'balance' in DB different with coming 'balance'
                       if (balanceNew > responseObj[i].balance) {
                         difference = '+' + (balanceNew - responseObj[i].balance);
                         status = 'positive';
+                        oldAddress = '';
 
                       } else if (balanceNew < responseObj[i].balance) {
                         difference = '-' + (responseObj[i].balance - balanceNew);
                         status = 'negative';
+                        oldAddress = '';
 
                       } else {
                         difference = '' + 0;
                         status = 'stable';
+                        oldAddress = '';
                       }
                     }
 
@@ -187,6 +192,7 @@ export class AddressesComponent implements OnInit {
                     this.balancesFull[index].difference = difference;
                     this.balancesFull[index].status = status;
                     this.balancesFull[index].address = addressNew;
+                    this.balancesFull[index].oldAddress = oldAddress;
                     this.balancesFull[index].balance = balanceNew;
 
                     //add item to new array
@@ -216,6 +222,10 @@ export class AddressesComponent implements OnInit {
       console.log('BalancesFull', this.balancesFull);
 
     });
+  }
+
+  ngOnDestroy() {
+
   }
 
 }

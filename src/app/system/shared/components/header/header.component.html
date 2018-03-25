@@ -1,5 +1,6 @@
-<header class="header">
+<!--<header class="header">
   <mat-toolbar color="primary">
+    <clr-icon shape="home"  size="24"></clr-icon>
     <span>Criptovich</span>
     <div class="header-nav">
       <ul>
@@ -9,4 +10,33 @@
     </div>
   </mat-toolbar>
 
+</header>-->
+
+
+
+
+
+<header class="header header-4">
+  <div class="branding">
+    <a routerLink="/" class="nav-link">
+      <clr-icon shape="home"></clr-icon>
+      <span class="title">Cryptovich</span>
+    </a>
+  </div>
+  <div class="header-nav">
+    <a [routerLink]="['/system','announce']" routerLinkActive="active" class="nav-link"><span class="nav-text">announce</span></a>
+    <a [routerLink]="['/system','rich-list']" routerLinkActive="active" class="nav-link"><span class="nav-text">rich-list</span></a>
+  </div>
+  <div class="header-actions">
+    <clr-dropdown>
+      <button class="nav-icon" clrDropdownTrigger>
+        <fa name="user"></fa>
+      </button>
+      <clr-dropdown-menu *clrIfOpen clrPosition="bottom-right">
+        <a href="..." clrDropdownItem>About</a>
+        <a href="..." clrDropdownItem>Preferences</a>
+        <a (click)="logout()" clrDropdownItem>Log out</a>
+      </clr-dropdown-menu>
+    </clr-dropdown>
+  </div>
 </header>

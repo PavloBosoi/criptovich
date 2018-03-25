@@ -1,7 +1,4 @@
-/*VARIABLES*/
-$green: #00C853;
-$red: #DD2C00;
-$teal: #21BB9E;
+@import '~global.scss';
 
 
 *{
@@ -9,6 +6,13 @@ $teal: #21BB9E;
   padding: 0;
   outline: none;
   box-sizing: border-box;
+}
+html{
+  font-size: $fz + px;
+}
+body{
+  @include fluidFontSize(14px,18px,480px,1680px,22px,16px);
+  text-rendering: optimizeSpeed;
 }
 li{
   list-style-type: none;

@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl, Validators} from "@angular/forms";
-import {AngularFireAuth} from "angularfire2/auth";
 import {Router} from "@angular/router";
+import {AngularFireAuth} from "angularfire2/auth";
 
 import {ValidationsService} from "../shared/services/validations.service";
 import {AuthService} from "../../shared/services/auth.service";
 
 @Component({
-  selector: 'ccc-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.scss']
+  selector: 'ccc-login-email',
+  templateUrl: 'login-email.component.html',
+  styleUrls: ['login-email.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class LoginEmailComponent implements OnInit {
   submitted = false;
-  registrationForm: FormGroup;
+  loginForm: FormGroup;
 
   constructor(
       private router: Router,
@@ -25,10 +25,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.registrationForm = new FormGroup({
-      name: new FormControl('', [
-        Validators.required
-      ]),
+    this.loginForm = new FormGroup({
       email: new FormControl('', [
         Validators.required,
         Validators.email
@@ -38,38 +35,35 @@ export class RegistrationComponent implements OnInit {
         Validators.minLength(6)
       ])
     });
+
+
   }
 
-
   isFieldValid(field: string) {
-    return this.validationsService.validateFields(this.registrationForm.get(field));
+    return this.validationsService.validateFields(this.loginForm.get(field));
   }
 
   onSubmit() {
 
-    const name = this.registrationForm.value.name,
-        email = this.registrationForm.value.email,
-        password = this.registrationForm.value.password;
+    const email = this.loginForm.value.email,
+        password = this.loginForm.value.password;
 
-    this.firebaseAuth.auth.createUserWithEmailAndPassword(email, password)
+    this.firebaseAuth.auth.signInWithEmailAndPassword(email, password)
         .then((success) => {
           console.log(success);
-          success.updateProfile({
-            displayName: name
-          });
           this.router.navigate(['/system','rich-list']);
         })
         .catch(function(error) {
           // Handle Errors here.
-          let errorCode = error.code;
-          let errorMessage = error.message;
-          console.log(errorCode,errorMessage);
-          if (errorCode == 'auth/weak-password') {
-            alert('The password is too weak.');
+          const errorCode = error.code,
+              errorMessage = error.message;
+          if (errorCode === 'auth/wrong-password') {
+            alert('Wrong password.');
           } else {
             alert(errorMessage);
           }
           console.log(error);
         });
   }
+
 }

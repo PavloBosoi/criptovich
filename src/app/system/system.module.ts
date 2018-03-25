@@ -1,6 +1,8 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {ClarityModule} from "@clr/angular";
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 import {SystemComponent} from "./system.component";
 import {AnnounceComponent} from "./announce/announce.component";
@@ -12,6 +14,7 @@ import {MaterialCustomModule} from "../shared/material-custom.module";
 import { AddressesComponent } from './rich-list/addresses/addresses.component';
 import { TotalComponent } from './rich-list/total/total.component';
 import {SharedDataService} from "./shared/services/shared-data.service";
+import {AuthNeedGuard} from "../shared/guards/auth-need.service";
 
 @NgModule({
     declarations: [
@@ -26,11 +29,14 @@ import {SharedDataService} from "./shared/services/shared-data.service";
         CommonModule,
         FormsModule,
         SystemRoutingModule,
-        MaterialCustomModule
+        MaterialCustomModule,
+        ClarityModule,
+        AngularFontAwesomeModule
     ],
     providers: [
         AnnounceService,
-        SharedDataService
+        SharedDataService,
+        AuthNeedGuard
     ]
 })
 export class SystemModule {

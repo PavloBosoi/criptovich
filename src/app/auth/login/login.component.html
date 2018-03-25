@@ -1,3 +1,11 @@
-<p>
-  login works!
-</p>
+<span class="form-icon"><fa name="lock"></fa></span>
+
+<div class="login-app-wrapper">
+  <div class="login-app login-app-google" (click)="loginWithGoogle()"><fa class="login-app-icon" name="google"></fa>login by google</div>
+  <div class="login-app login-app-facebook" (click)="loginWithFacebook()"><fa class="login-app-icon" name="facebook"></fa>login by facebook</div>
+  <div class="login-app login-app-email" [routerLink]="['/login-email']"><fa class="login-app-icon" name="envelope"></fa>login by E-mail</div>
+</div>
+
+<div class="create-account">
+  <a [routerLink]="['/registration']">No account? Create one</a>
+</div>

@@ -1,0 +1,36 @@
+@import '~global.scss';
+
+.login-app{
+  @include ptr(padding, 20 0);
+  @include ptr(margin, 20 0 0 0);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.login-app:first-child{
+  margin: 0;
+}
+.login-app-google{
+  border: 1px solid $gray;
+  .login-app-icon{
+    color: #d43539;
+  }
+}
+.login-app-facebook{
+  border: 1px solid #3C62A6;
+  background-color: #3C62A6;
+  color: #fff;
+}
+.login-app-email{
+  border: 1px solid $gray;
+  background-color: $gray;
+}
+.login-app-icon{
+  @include ptr(padding, 0 20);
+  float: left;
+  @include fluidFontSize(14px,20px,480px,1680px,24px,16px);
+  @include ptr(width, 70);
+}
+.create-account{
+  @include ptr(margin, 20 0 0);
+  text-align: center;
+}

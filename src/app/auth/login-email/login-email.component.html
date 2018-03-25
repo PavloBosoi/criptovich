@@ -1,25 +1,11 @@
 <div class="form-visualization">
   <a routerLink="/login">Go back</a>
-  <span class="form-icon"><fa name="user-plus"></fa></span>
+  <span class="form-icon"><fa name="user"></fa></span>
 </div>
 
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" [hidden]="submitted">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" [hidden]="submitted">
 
   <section class="form-block">
-    <div class="form-group">
-      <label for="empUsername"
-             aria-haspopup="true"
-             role="tooltip"
-             class="tooltip tooltip-validation tooltip-md" [class.invalid]="isFieldValid('name')">
-        <input class="email" type="text" id="empUsername" placeholder="Username"
-               required
-               name="firstName"
-               formControlName="name">
-        <span class="tooltip-content" *ngIf="isFieldValid('name')">
-          <span class="field-error" *ngIf="registrationForm.get('name').errors['required']">Name is Required.</span>
-        </span>
-      </label>
-    </div>
     <div class="form-group">
       <label for="empEmail"
              aria-haspopup="true"
@@ -31,8 +17,8 @@
                name="firstName"
                formControlName="email">
         <span class="tooltip-content" *ngIf="isFieldValid('email')">
-          <span class="field-error" *ngIf="registrationForm.get('email').errors['required']">E-mail is Required.</span>
-          <span class="field-error" *ngIf="registrationForm.get('email').errors['email']">Wrong E-mail address.</span>
+          <span class="field-error" *ngIf="loginForm.get('email').errors['required']">E-mail is Required.</span>
+          <span class="field-error" *ngIf="loginForm.get('email').errors['email']">Wrong E-mail address.</span>
         </span>
       </label>
     </div>
@@ -47,13 +33,13 @@
                name="password"
                formControlName="password">
         <span class="tooltip-content" *ngIf="isFieldValid('password')">
-          <span class="field-error" *ngIf="registrationForm.get('password').errors['required']">Password Name is Required.</span>
-          <span class="field-error" *ngIf="registrationForm.get('password').errors['minlength']">Password must be mor 6 symbols.</span>
+          <span class="field-error" *ngIf="loginForm.get('password').errors['required']">Password Name is Required.</span>
+          <span class="field-error" *ngIf="loginForm.get('password').errors['minlength']">Password must be mor 6 symbols.</span>
         </span>
       </label>
     </div>
     <button class="btn btn-primary" type="submit"
-            [disabled]="registrationForm.invalid">Submit</button>
+            [disabled]="loginForm.invalid">Login</button>
   </section>
 
 </form>

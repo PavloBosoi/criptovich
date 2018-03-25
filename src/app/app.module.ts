@@ -7,6 +7,7 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { environment } from '../environments/environment';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ClarityModule} from "@clr/angular";
 import 'hammerjs';
 
 
@@ -34,7 +35,8 @@ import {DataService} from "./shared/services/data.service";
     MaterialCustomModule,
     AngularFireDatabaseModule,
     AngularFireModule.initializeApp(environment.firebase),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ClarityModule
   ],
   exports: [
 

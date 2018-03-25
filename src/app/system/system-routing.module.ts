@@ -4,11 +4,12 @@ import {Routes, RouterModule} from "@angular/router";
 import {AnnounceComponent} from "./announce/announce.component";
 import {SystemComponent} from "./system.component";
 import {RichListComponent} from "./rich-list/rich-list.component";
+import {AuthNeedGuard} from "../shared/guards/auth-need.service";
 
 const routes: Routes = [
     {path: 'system', component: SystemComponent, children: [
-        {path: 'announce', component: AnnounceComponent},
-        {path: 'rich-list', component: RichListComponent}
+        {path: 'announce', component: AnnounceComponent, canActivate: [AuthNeedGuard]},
+        {path: 'rich-list', component: RichListComponent, canActivate: [AuthNeedGuard]}
     ]}
 ];
 

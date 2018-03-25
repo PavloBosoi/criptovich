@@ -10,7 +10,7 @@
     <!-- Position Column -->
     <ng-container matColumnDef="address">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.address}} <p *ngIf="element.oldAddress"> Old address: {{element.oldAddress}}</p> </mat-cell>
     </ng-container>
 
     <!-- Name Column -->

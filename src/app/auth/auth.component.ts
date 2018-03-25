@@ -1,9 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewEncapsulation} from "@angular/core";
 import {Router} from "@angular/router";
 
 @Component({
     selector: 'ccc-auth',
-    templateUrl: './auth.component.html'
+    styleUrls: ['./auth.component.scss'],
+    templateUrl: './auth.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 
 export class AuthComponent implements OnInit{
