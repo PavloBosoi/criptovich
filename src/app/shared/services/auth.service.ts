@@ -15,8 +15,8 @@ export class AuthService {
     isAuthorized() {
         this.authNeedGuard.authState()
             .subscribe((result) => {
-                if(result) {
-                    this.router.navigate(['/system','announce']);
+                if (result) {
+                    this.router.navigate(['/system', 'announce']);
                 }
             });
     }
